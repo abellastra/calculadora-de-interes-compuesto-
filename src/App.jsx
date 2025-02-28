@@ -36,7 +36,6 @@ function App() {
 
     if (e.target.id === "montoDeIngreso") {
       setDineroIngresado(valorNumerico); // Mantiene el valor sin formatear
-      setDineroFormateado("");
     }
 
     let ingresoApotesMensuales = e.target.value;
@@ -44,7 +43,6 @@ function App() {
     if ((valorNumericoAporte.match(/\./g) || []).length > 1) return;
     if (e.target.id === "aportesMensuales") {
       setAportesMensuales(valorNumericoAporte);
-      setAportesMensualesFormateado("");
     }
   }
 
@@ -76,10 +74,26 @@ function App() {
       frecuencia !== "" &&
       tiempo !== ""
     ) {
-      setMontoFinal(`Resultado \n${formatearMoneda(montoFinal.toFixed(2))}`);
+      // setMontoFinal(`Resultado \n${formatearMoneda(montoFinal.toFixed(2))}`);
+      setMontoFinal(
+        <>
+          <span>Resultado</span>
+          <span>{formatearMoneda(montoFinal.toFixed(2))}</span>
+        </>
+      );
     } else {
       setMontoFinal(alert("complete todos los campos "));
     }
+  }
+  function restablecer() {
+    setAportesMensualesFormateado("");
+    setAportesMensuales("");
+    setDineroFormateado("");
+    setDineroIngresado("");
+    setTasaInteres("");
+    setTiempo("");
+    setMontoFinal("");
+    setFrecuencia("");
   }
   return (
     <>
@@ -95,6 +109,7 @@ function App() {
               value={dineroFormateado || dineroIngresado}
               onChange={mejorarCambioDinero}
               onBlur={aplicarFormato}
+              onFocus={() => setDineroFormateado("")}
             />
           </div>
           <div className="container_item">
@@ -106,6 +121,7 @@ function App() {
               value={aportesMensualesFormateado || aportesMensuales}
               onChange={mejorarCambioDinero}
               onBlur={aplicarFormato}
+              onFocus={() => setAportesMensualesFormateado("")}
             />
           </div>
           <div className="container_item">
@@ -152,7 +168,12 @@ function App() {
             <button className="button" onClick={calculaInteres}>
               Calcular
             </button>
-            <h1 style={{ whiteSpace: "pre-line" }}>{montoFinal}</h1>
+            <button className="restablecer" onClick={restablecer}>
+              Restablecer
+            </button>
+            <h1 className="resultadoFinal" style={{ whiteSpace: "pre-line" }}>
+              {montoFinal}
+            </h1>
           </div>
         </div>
       </div>
